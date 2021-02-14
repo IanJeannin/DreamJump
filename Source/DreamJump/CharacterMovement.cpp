@@ -2,6 +2,8 @@
 
 
 #include "CharacterMovement.h"
+#include "Runtime/Engine/Classes/GameFramework/CharacterMovementComponent.h"
+#include "Runtime/Engine/Public/TimerManager.h"
 
 // Sets default values
 ACharacterMovement::ACharacterMovement()
@@ -28,6 +30,12 @@ ACharacterMovement::ACharacterMovement()
 	FollowCamera->SetupAttachment(CameraBoom, USpringArmComponent::SocketName);
 	FollowCamera->bUsePawnControlRotation = false;
 
+	CanDash = true;
+	DashDistance = 6000.0f;
+	DashCooldown = 1.0f;
+
+
+
 }
 
 // Called when the game starts or when spawned
@@ -52,12 +60,14 @@ void ACharacterMovement::SetupPlayerInputComponent(UInputComponent* PlayerInputC
 	PlayerInputComponent->BindAxis("Turn", this, &APawn::AddControllerYawInput);
 	PlayerInputComponent->BindAxis("LookUp", this, &APawn::AddControllerPitchInput);
 
-	PlayerInputComponent->BindAction("Jump", IE_Pressed, this, &ACharacter::Jump);
+	PlayerInputComponent->BindAction("Jump", IE_Pressed, this, &ACharacterMovement::DoubleJump);
 	PlayerInputComponent->BindAction("Jump", IE_Released, this, &ACharacter::StopJumping);
 
 	PlayerInputComponent->BindAxis("MoveForward", this, &ACharacterMovement::MoveForward);
 	PlayerInputComponent->BindAxis("MoveRight", this, &ACharacterMovement::MoveRight);
 
+	PlayerInputComponent->BindAction("Dash", IE_Pressed, this, &ACharacterMovement::Dash);
+	PlayerInputComponent->BindAction("Dash", IE_Released, this, &ACharacterMovement::StopDashing);
 
 
 }
@@ -78,5 +88,46 @@ void ACharacterMovement::MoveRight(float Axis)
 
 	FVector Direction = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::Y);
 	AddMovementInput(Direction, Axis);
+}
+
+void ACharacterMovement::DoubleJump()
+{
+	if (DoubleJumpCounter <= 1)
+	{
+		ACharacterMovement::LaunchCharacter(FVector(0, 0, GetCharacterMovement()->JumpZVelocity), false, true);
+		DoubleJumpCounter++;
+	}
+}
+void ACharacterMovement::Walk()
+{
+}
+void ACharacterMovement::Landed(const FHitResult& Hit)
+{
+	DoubleJumpCounter = 0;
+}
+void ACharacterMovement::Dash()
+{
+	if (CanDash)
+	{
+		GetCharacterMovement()->BrakingFrictionFactor = 0.f;
+		LaunchCharacter(FVector(FollowCamera->GetForwardVector().X, FollowCamera->GetForwardVector().Y, 0).GetSafeNormal() * DashDistance, true, true);
+
+		CanDash = false;
+
+		GetWorldTimerManager().SetTimer(UnusedHandle, this, &ACharacterMovement::StopDashing, DashStop, false);
+
+	}
+}
+
+void ACharacterMovement::StopDashing()
+{
+	GetCharacterMovement()->StopMovementImmediately();
+	GetWorldTimerManager().SetTimer(UnusedHandle, this, &ACharacterMovement::ResetDash, DashCooldown, false);
+	GetCharacterMovement()->BrakingFrictionFactor = 2.f;
+
+}
+void ACharacterMovement::ResetDash()
+{
+	CanDash = true;
 }
 
