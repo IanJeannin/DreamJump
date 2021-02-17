@@ -121,7 +121,7 @@ void ACharacterMovement::Dash()
 
 void ACharacterMovement::StopDashing()
 {
-	GetCharacterMovement()->StopMovementImmediately();
+	GetCharacterMovement()->StopActiveMovement();
 	GetWorldTimerManager().SetTimer(UnusedHandle, this, &ACharacterMovement::ResetDash, DashCooldown, false);
 	GetCharacterMovement()->BrakingFrictionFactor = 2.f;
 
