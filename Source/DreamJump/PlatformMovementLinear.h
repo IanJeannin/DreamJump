@@ -4,32 +4,28 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
-#include "TimerManager.h"
-#include "PlatformMovement.generated.h"
+#include "PlatformMovementLinear.generated.h"
 
 UCLASS()
-class DREAMJUMP_API APlatformMovement : public AActor
+class DREAMJUMP_API APlatformMovementLinear : public AActor
 {
 	GENERATED_BODY()
 	
-public:
+public:	
+	// Sets default values for this actor's properties
+	APlatformMovementLinear();
+
 	//The location of the platform when it begins and where it currently is in motion
 	FVector currentLocation;
 	FVector startingLocation;
 
 	//Variable that does the rotation
 	FQuat rotation;
-	
-	//A universal float to log DeltaTime when out of scope
-	float UDeltaTime;
-
-	//To be used later to set up a delay in platform directional switch
-	FTimerHandle tempTimerHandle;
 
 	//Checkbox to determine moving or not
 	UPROPERTY(EditAnywhere)
 		bool isMoving;
-	
+
 	//Speed of the platform
 	UPROPERTY(EditAnywhere)
 		float speed;
@@ -42,6 +38,13 @@ public:
 	UPROPERTY(EditAnywhere)
 		int moveAxis;
 
+	//Either 1 or -1, changed automatically in code to reverse the platform direction
+		int direction;
+
+	//True for reverse movement, false for forward
+	UPROPERTY(EditAnywhere)
+		bool reverse;
+
 	//Rotate the X axis a certain units per frame
 	UPROPERTY(EditAnywhere)
 		float xRotate;
@@ -52,27 +55,15 @@ public:
 	UPROPERTY(EditAnywhere)
 		float zRotate;
 
-	//Either 1 or -1, changed automatically in code to reverse the platform direction
-	int direction;
-
-	// Sets default values for this actor's properties
-	APlatformMovement();
+	//Function to reverse the direction of travel
+	void SwitchDirection();
 
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
-public:
+public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
-public:
-	//Switch the platform's direction. To be later used with a timer
-	UFUNCTION(BlueprintCallable)
-	void SwitchDirection();
-
-public:
-	//Function to move, later called within blueprints to adjust delay
-	UFUNCTION(BlueprintCallable)
-	void MovePlatform();
 };

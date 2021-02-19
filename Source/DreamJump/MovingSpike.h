@@ -17,18 +17,33 @@ public:
 	// Sets default values for this actor's properties
 	AMovingSpike();
 
+	//Positions of the spikes to be used in the main
 	FVector startingPosition;
 	FVector currentPosition;
 
-	float speed;
+	//Speed in which the spike travels
+	UPROPERTY(EditAnywhere)
+		float speed;
+
+	//The number of SECONDS the spike will stay at it's two peaks
+	UPROPERTY(EditAnywhere)
+		float delaySeconds;
+
+	//Distance from the starting position in which travel ends
 	float peakheight;
+	//Direction the spike will travel
 	int direction;
+	//Universal storage float for DeltaTime
 	float UDeltaTime;
 
+	//Determines whether or not the spike is able to move again
 	bool canFire;
+	//Handle used with setting a timer
 	FTimerHandle FireDelayTimerHandle;
+	//Function to allow the spike to move again
 	void ResetFire();
 
+	//Move the spike
 	void MoveSpike();
 
 protected:
