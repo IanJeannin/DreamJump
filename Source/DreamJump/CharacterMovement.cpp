@@ -24,6 +24,16 @@ ACharacterMovement::ACharacterMovement()
 	CameraBoom->SetupAttachment(RootComponent);
 
 	CameraBoom->TargetArmLength = 300.0f;
+
+	/*
+	CameraBoom->bEnableCameraLag = true;
+	CameraBoom->CameraLagSpeed = 2;
+	CameraBoom->CameraLagMaxDistance = 1.5f;
+	CameraBoom->bEnableCameraRotationLag = true;
+	CameraBoom->CameraRotationLagSpeed = 4;
+	CameraBoom->CameraLagMaxTimeStep = 1;
+	*/
+
 	CameraBoom->bUsePawnControlRotation = true;
 
 	FollowCamera = CreateDefaultSubobject<UCameraComponent>(TEXT("FollowCamera"));
