@@ -92,7 +92,7 @@ void ACharacterMovement::MoveRight(float Axis)
 
 void ACharacterMovement::DoubleJump()
 {
-	if (DoubleJumpCounter <= 1)
+	if (DoubleJumpCounter <= 0)
 	{
 		ACharacterMovement::LaunchCharacter(FVector(0, 0, GetCharacterMovement()->JumpZVelocity), false, true);
 		DoubleJumpCounter++;
