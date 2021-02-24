@@ -4,6 +4,8 @@
 #include "CharacterMovement.h"
 #include "Runtime/Engine/Classes/GameFramework/CharacterMovementComponent.h"
 #include "Runtime/Engine/Public/TimerManager.h"
+#include "GameFramework/Actor.h"
+#include "Engine/World.h"
 
 // Sets default values
 ACharacterMovement::ACharacterMovement()
@@ -17,13 +19,23 @@ ACharacterMovement::ACharacterMovement()
 
 	GetCharacterMovement()->bOrientRotationToMovement = true;
 	GetCharacterMovement()->RotationRate = FRotator(0.0f, 540.0f, 0.0f);
-	GetCharacterMovement()->JumpZVelocity = 600.0f;
+	GetCharacterMovement()->JumpZVelocity = 600.f;
 	GetCharacterMovement()->AirControl = 0.2f;
 
 	CameraBoom = CreateDefaultSubobject<USpringArmComponent>(TEXT("CameraBoom"));
 	CameraBoom->SetupAttachment(RootComponent);
 
 	CameraBoom->TargetArmLength = 300.0f;
+
+	/*
+	CameraBoom->bEnableCameraLag = true;
+	CameraBoom->CameraLagSpeed = 2;
+	CameraBoom->CameraLagMaxDistance = 1.5f;
+	CameraBoom->bEnableCameraRotationLag = true;
+	CameraBoom->CameraRotationLagSpeed = 4;
+	CameraBoom->CameraLagMaxTimeStep = 1;
+	*/
+
 	CameraBoom->bUsePawnControlRotation = true;
 
 	FollowCamera = CreateDefaultSubobject<UCameraComponent>(TEXT("FollowCamera"));
@@ -33,6 +45,10 @@ ACharacterMovement::ACharacterMovement()
 	CanDash = true;
 	DashDistance = 6000.0f;
 	DashCooldown = 1.0f;
+	GravMultiplier = 0.1f;
+	BaseCustomGravScale = 1.0f;
+	FallingGravityScale;
+
 
 
 
@@ -42,6 +58,8 @@ ACharacterMovement::ACharacterMovement()
 void ACharacterMovement::BeginPlay()
 {
 	Super::BeginPlay();
+
+	GetWorld()->GetTimerManager().SetTimer(FallCheckHandle, this, &ACharacterMovement::FallCheckTimer, 0.1f, true, 0.f);
 	
 }
 
@@ -60,8 +78,8 @@ void ACharacterMovement::SetupPlayerInputComponent(UInputComponent* PlayerInputC
 	PlayerInputComponent->BindAxis("Turn", this, &APawn::AddControllerYawInput);
 	PlayerInputComponent->BindAxis("LookUp", this, &APawn::AddControllerPitchInput);
 
-	PlayerInputComponent->BindAction("Jump", IE_Pressed, this, &ACharacterMovement::DoubleJump);
-	PlayerInputComponent->BindAction("Jump", IE_Released, this, &ACharacter::StopJumping);
+	PlayerInputComponent->BindAction("Jump", IE_Pressed, this, &ACharacterMovement::CustomJump);
+	PlayerInputComponent->BindAction("Jump", IE_Released, this, &ACharacterMovement::StopCustomJump);
 
 	PlayerInputComponent->BindAxis("MoveForward", this, &ACharacterMovement::MoveForward);
 	PlayerInputComponent->BindAxis("MoveRight", this, &ACharacterMovement::MoveRight);
@@ -103,7 +121,41 @@ void ACharacterMovement::Walk()
 }
 void ACharacterMovement::Landed(const FHitResult& Hit)
 {
+	GetCharacterMovement()->GravityScale = BaseCustomGravScale;
+	GetWorld()->GetTimerManager().ClearTimer(GravMultiplierHandle);
+	bJumping = false;
+	GravMultiplier = 0.1f;
 	DoubleJumpCounter = 0;
+}
+void ACharacterMovement::GravityMultiplierTimer()
+{
+	if (GetCharacterMovement()->GravityScale < FallingGravityScale && bJumping)
+	{
+		GetCharacterMovement()->GravityScale += GravMultiplier;
+		GravMultiplier += 0.4f;
+	}
+	if (GetCharacterMovement()->GravityScale >= FallingGravityScale && bJumping)
+	{
+		GetCharacterMovement()->GravityScale = FallingGravityScale;
+	}
+}
+void ACharacterMovement::FallCheckTimer()
+{
+	if (GetCharacterMovement()->IsFalling() && !bJumping)
+	{
+		GetCharacterMovement()->GravityScale = FallingGravityScale;
+	}
+}
+void ACharacterMovement::CustomJump()
+{
+	Jump();
+
+	GetWorld()->GetTimerManager().SetTimer(GravMultiplierHandle , this, &ACharacterMovement::GravityMultiplierTimer, 0.1f, true, 0.f);
+	bJumping = true;
+}
+void ACharacterMovement::StopCustomJump()
+{
+	GetCharacterMovement()->GravityScale = FallingGravityScale;
 }
 void ACharacterMovement::Dash()
 {
