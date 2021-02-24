@@ -47,7 +47,7 @@ ACharacterMovement::ACharacterMovement()
 	DashCooldown = 1.0f;
 	GravMultiplier = 0.1f;
 	BaseCustomGravScale = 1.0f;
-	MaxCustomGravityScale = 4.0f;
+	FallingGravityScale;
 
 
 
@@ -129,21 +129,21 @@ void ACharacterMovement::Landed(const FHitResult& Hit)
 }
 void ACharacterMovement::GravityMultiplierTimer()
 {
-	if (GetCharacterMovement()->GravityScale < MaxCustomGravityScale && bJumping)
+	if (GetCharacterMovement()->GravityScale < FallingGravityScale && bJumping)
 	{
 		GetCharacterMovement()->GravityScale += GravMultiplier;
 		GravMultiplier += 0.4f;
 	}
-	if (GetCharacterMovement()->GravityScale >= MaxCustomGravityScale && bJumping)
+	if (GetCharacterMovement()->GravityScale >= FallingGravityScale && bJumping)
 	{
-		GetCharacterMovement()->GravityScale = MaxCustomGravityScale;
+		GetCharacterMovement()->GravityScale = FallingGravityScale;
 	}
 }
 void ACharacterMovement::FallCheckTimer()
 {
 	if (GetCharacterMovement()->IsFalling() && !bJumping)
 	{
-		GetCharacterMovement()->GravityScale = MaxCustomGravityScale;
+		GetCharacterMovement()->GravityScale = FallingGravityScale;
 	}
 }
 void ACharacterMovement::CustomJump()
@@ -155,7 +155,7 @@ void ACharacterMovement::CustomJump()
 }
 void ACharacterMovement::StopCustomJump()
 {
-	GetCharacterMovement()->GravityScale = MaxCustomGravityScale;
+	GetCharacterMovement()->GravityScale = FallingGravityScale;
 }
 void ACharacterMovement::Dash()
 {

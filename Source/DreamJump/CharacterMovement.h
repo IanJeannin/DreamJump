@@ -60,7 +60,7 @@ public:
 	UPROPERTY(EditAnywhere)
 		float BaseCustomGravScale;
 	UPROPERTY(EditAnywhere)
-		float MaxCustomGravityScale;
+		float FallingGravityScale;
 	//UPROPERTY(EditAnywhere)
 		//float CustomJumpHeight;
 
