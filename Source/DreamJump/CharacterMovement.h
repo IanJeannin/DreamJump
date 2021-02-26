@@ -72,6 +72,13 @@ public:
 
 	UFUNCTION()
 		void Walk();
+	UFUNCTION()
+		void Sprint();
+	UPROPERTY(EditAnywhere)
+		float WalkSpeed;
+	UPROPERTY(EditAnywhere)
+		float RunSpeed;
+
 
 	UFUNCTION()
 		void Dash();
@@ -89,6 +96,7 @@ public:
 		void StopDashing();
 	UFUNCTION()
 		void ResetDash();
+	
 	UPROPERTY()
 		FTimerHandle UnusedHandle;
 	UPROPERTY()

@@ -48,6 +48,8 @@ ACharacterMovement::ACharacterMovement()
 	GravMultiplier = 0.1f;
 	BaseCustomGravScale = 1.0f;
 	FallingGravityScale;
+	WalkSpeed = 600.f;
+	RunSpeed = 1000.f;
 
 
 
@@ -80,6 +82,12 @@ void ACharacterMovement::SetupPlayerInputComponent(UInputComponent* PlayerInputC
 
 	PlayerInputComponent->BindAction("Jump", IE_Pressed, this, &ACharacterMovement::CustomJump);
 	PlayerInputComponent->BindAction("Jump", IE_Released, this, &ACharacterMovement::StopCustomJump);
+
+	PlayerInputComponent->BindAction("Sprint", IE_Pressed, this, &ACharacterMovement::Sprint);
+	PlayerInputComponent->BindAction("Sprint", IE_Released, this, &ACharacterMovement::Walk);
+
+	PlayerInputComponent->BindAction("Walk", IE_Pressed, this, &ACharacterMovement::Walk);
+	PlayerInputComponent->BindAction("Walk", IE_Released, this, &ACharacterMovement::Sprint);
 
 	PlayerInputComponent->BindAxis("MoveForward", this, &ACharacterMovement::MoveForward);
 	PlayerInputComponent->BindAxis("MoveRight", this, &ACharacterMovement::MoveRight);
@@ -118,6 +126,11 @@ void ACharacterMovement::DoubleJump()
 }
 void ACharacterMovement::Walk()
 {
+	GetCharacterMovement()->MaxWalkSpeed = WalkSpeed;
+}
+void ACharacterMovement::Sprint()
+{
+	GetCharacterMovement()->MaxWalkSpeed = RunSpeed;
 }
 void ACharacterMovement::Landed(const FHitResult& Hit)
 {
