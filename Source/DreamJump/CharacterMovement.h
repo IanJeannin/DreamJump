@@ -29,22 +29,11 @@ public:
 
 	void MoveForward(float Axis);
 	void MoveRight(float Axis);
-
-	
-
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
 	virtual void Landed(const FHitResult& Hit) override;
-
-	void CustomJump();
-	void StopCustomJump();
-
-	
-
-	void GravityMultiplierTimer();
-	void FallCheckTimer();
 
 public:	
 	// Called every frame
@@ -52,17 +41,6 @@ public:
 
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
-
-	UPROPERTY(EditAnywhere)
-	float GravMultiplier = 0.1f;
-	UPROPERTY(EditAnywhere)
-	bool bJumping;
-	UPROPERTY(EditAnywhere)
-		float BaseCustomGravScale;
-	UPROPERTY(EditAnywhere)
-		float FallingGravityScale;
-	//UPROPERTY(EditAnywhere)
-		//float CustomJumpHeight;
 
 	UFUNCTION()
 		void DoubleJump();
@@ -91,11 +69,6 @@ public:
 		void ResetDash();
 	UPROPERTY()
 		FTimerHandle UnusedHandle;
-	UPROPERTY()
-		FTimerHandle GravMultiplierHandle;
-	UPROPERTY()
-		FTimerHandle FallCheckHandle;
-		
 
 
 };
