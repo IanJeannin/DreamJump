@@ -43,15 +43,11 @@ void APlatformMovement::Tick(float DeltaTime)
 		MovePlatform();
 	}
 
-	//Check to see if the platform should be rotating
-	if (isRotating)
-	{
-		//Set the rotation with the three adjustable parameters
-		rotation = FQuat(FRotator(xRotate, yRotate, zRotate));
+	//Set the rotation with the three adjustable parameters
+	rotation = FQuat(FRotator(xRotate, yRotate, zRotate));
 
-		//Move the actor with the rotation
-		AddActorLocalRotation(rotation, false, 0, ETeleportType::None);
-	}
+	//Move the actor with the rotation
+	AddActorLocalRotation(rotation, false, 0, ETeleportType::None);
 }
 
 //Switches the platform's direction
