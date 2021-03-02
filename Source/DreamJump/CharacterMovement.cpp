@@ -10,7 +10,7 @@
 // Sets default values
 ACharacterMovement::ACharacterMovement()
 {
- 	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
+	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
 	bUseControllerRotationPitch = false;
@@ -48,6 +48,8 @@ ACharacterMovement::ACharacterMovement()
 	GravMultiplier = 0.1f;
 	BaseCustomGravScale = 1.0f;
 	FallingGravityScale;
+	RunSpeed = 1000.f;
+	WalkSpeed = 600.f;
 
 
 
@@ -60,7 +62,7 @@ void ACharacterMovement::BeginPlay()
 	Super::BeginPlay();
 
 	GetWorld()->GetTimerManager().SetTimer(FallCheckHandle, this, &ACharacterMovement::FallCheckTimer, 0.1f, true, 0.f);
-	
+
 }
 
 // Called every frame
@@ -80,6 +82,9 @@ void ACharacterMovement::SetupPlayerInputComponent(UInputComponent* PlayerInputC
 
 	PlayerInputComponent->BindAction("Jump", IE_Pressed, this, &ACharacterMovement::CustomJump);
 	PlayerInputComponent->BindAction("Jump", IE_Released, this, &ACharacterMovement::StopCustomJump);
+
+	PlayerInputComponent->BindAction("Sprint", IE_Pressed, this, &ACharacterMovement::Sprint);
+	PlayerInputComponent->BindAction("Sprint", IE_Released, this, &ACharacterMovement::Walk);
 
 	PlayerInputComponent->BindAxis("MoveForward", this, &ACharacterMovement::MoveForward);
 	PlayerInputComponent->BindAxis("MoveRight", this, &ACharacterMovement::MoveRight);
@@ -118,6 +123,11 @@ void ACharacterMovement::DoubleJump()
 }
 void ACharacterMovement::Walk()
 {
+	GetCharacterMovement()->MaxWalkSpeed = WalkSpeed;
+}
+void ACharacterMovement::Sprint()
+{
+	GetCharacterMovement()->MaxWalkSpeed = RunSpeed;
 }
 void ACharacterMovement::Landed(const FHitResult& Hit)
 {
@@ -150,7 +160,7 @@ void ACharacterMovement::CustomJump()
 {
 	Jump();
 
-	GetWorld()->GetTimerManager().SetTimer(GravMultiplierHandle , this, &ACharacterMovement::GravityMultiplierTimer, 0.1f, true, 0.f);
+	GetWorld()->GetTimerManager().SetTimer(GravMultiplierHandle, this, &ACharacterMovement::GravityMultiplierTimer, 0.1f, true, 0.f);
 	bJumping = true;
 }
 void ACharacterMovement::StopCustomJump()
@@ -182,4 +192,3 @@ void ACharacterMovement::ResetDash()
 {
 	CanDash = true;
 }
-

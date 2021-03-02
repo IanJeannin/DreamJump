@@ -25,12 +25,12 @@ public:
 		USpringArmComponent* CameraBoom;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera)
-		UCameraComponent* FollowCamera; 
+		UCameraComponent* FollowCamera;
 
 	void MoveForward(float Axis);
 	void MoveRight(float Axis);
 
-	
+
 
 protected:
 	// Called when the game starts or when spawned
@@ -41,12 +41,12 @@ protected:
 	void CustomJump();
 	void StopCustomJump();
 
-	
+
 
 	void GravityMultiplierTimer();
 	void FallCheckTimer();
 
-public:	
+public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
@@ -54,9 +54,9 @@ public:
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
 	UPROPERTY(EditAnywhere)
-	float GravMultiplier = 0.1f;
+		float GravMultiplier = 0.1f;
 	UPROPERTY(EditAnywhere)
-	bool bJumping;
+		bool bJumping;
 	UPROPERTY(EditAnywhere)
 		float BaseCustomGravScale;
 	UPROPERTY(EditAnywhere)
@@ -72,6 +72,13 @@ public:
 
 	UFUNCTION()
 		void Walk();
+	UFUNCTION()
+		void Sprint();
+	UPROPERTY()
+		float WalkSpeed;
+	UPROPERTY()
+		float RunSpeed;
+
 
 	UFUNCTION()
 		void Dash();
@@ -95,7 +102,7 @@ public:
 		FTimerHandle GravMultiplierHandle;
 	UPROPERTY()
 		FTimerHandle FallCheckHandle;
-		
+
 
 
 };
