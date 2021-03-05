@@ -1,9 +1,9 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
+#include "MovingSpike.h"
 #include "TimerManager.h"
 #include "Engine.h"
-#include "MovingSpike.h"
 
 // Sets default values
 AMovingSpike::AMovingSpike()
@@ -11,10 +11,11 @@ AMovingSpike::AMovingSpike()
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
+	//Setting default values
 	peakheight = 110.0f;
-	speed = 50.0f;
+	speed = 600.0f;
+	delaySeconds = 1.5f;
 	direction = 1;
-
 	canFire = true;
 }
 
@@ -23,6 +24,7 @@ void AMovingSpike::BeginPlay()
 {
 	Super::BeginPlay();
 	
+	//Log the positions on play
 	startingPosition = this->GetActorLocation();
 	currentPosition = this->GetActorLocation();
 }
@@ -32,20 +34,24 @@ void AMovingSpike::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
+	//Update the universal float each frame
 	UDeltaTime = DeltaTime;
 
+	//As long as it can move, move it
 	if (canFire == true)
 	{
 		MoveSpike();
 	}
 }
 
+//Reset the fire modifier and clear the timer
 void AMovingSpike::ResetFire()
 {
 	canFire = true;
 	GetWorldTimerManager().ClearTimer(FireDelayTimerHandle);
 }
 
+//Function that handles the movement commands
 void AMovingSpike::MoveSpike()
 {
 	//Moving DOWN
@@ -60,10 +66,12 @@ void AMovingSpike::MoveSpike()
 		//Runs once it reaches its bottom peak
 		else
 		{
+			//Disable moving and switch directions
 			canFire = false;
 			direction *= -1;
 
-			GetWorld()->GetTimerManager().SetTimer(FireDelayTimerHandle, this, &AMovingSpike::ResetFire, 3.0f, false);
+			//Start a timer to be able to move again
+			GetWorld()->GetTimerManager().SetTimer(FireDelayTimerHandle, this, &AMovingSpike::ResetFire, delaySeconds, false);
 		}
 	}
 	//Moving UP
@@ -78,10 +86,12 @@ void AMovingSpike::MoveSpike()
 		//Runs once it reaches its top peak
 		else
 		{
+			//Disable moving and switch directions
 			canFire = false;
 			direction *= -1;
 
-			GetWorld()->GetTimerManager().SetTimer(FireDelayTimerHandle, this, &AMovingSpike::ResetFire, 3.0f, false);
+			//Start a timer to be able to move again
+			GetWorld()->GetTimerManager().SetTimer(FireDelayTimerHandle, this, &AMovingSpike::ResetFire, delaySeconds, false);
 		}
 	}
 }
