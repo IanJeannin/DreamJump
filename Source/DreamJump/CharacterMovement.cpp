@@ -62,7 +62,8 @@ void ACharacterMovement::BeginPlay()
 	Super::BeginPlay();
 
 	GetWorld()->GetTimerManager().SetTimer(FallCheckHandle, this, &ACharacterMovement::FallCheckTimer, 0.1f, true, 0.f);
-	GetCharacterMovement()->MaxWalkSpeed = WalkSpeed;
+	WalkSpeed = GetCharacterMovement()->MaxWalkSpeed;
+	//GetCharacterMovement()->MaxWalkSpeed = WalkSpeed;
 
 }
 
