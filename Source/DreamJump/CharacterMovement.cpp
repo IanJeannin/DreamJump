@@ -23,6 +23,7 @@ ACharacterMovement::ACharacterMovement()
 	GetCharacterMovement()->AirControl = 0.2f;
 
 	CameraBoom = CreateDefaultSubobject<USpringArmComponent>(TEXT("CameraBoom"));
+	
 	CameraBoom->SetupAttachment(RootComponent);
 
 	CameraBoom->TargetArmLength = 300.0f;
@@ -37,10 +38,15 @@ ACharacterMovement::ACharacterMovement()
 	*/
 
 	CameraBoom->bUsePawnControlRotation = true;
+	
 
 	FollowCamera = CreateDefaultSubobject<UCameraComponent>(TEXT("FollowCamera"));
 	FollowCamera->SetupAttachment(CameraBoom, USpringArmComponent::SocketName);
 	FollowCamera->bUsePawnControlRotation = false;
+	FollowCamera->bUseControllerViewRotation_DEPRECATED = false;
+	GetCharacterMovement()->bOrientRotationToMovement = true;
+	GetCharacterMovement()->bUseControllerDesiredRotation = false;
+	
 
 	CanDash = true;
 	DashDistance = 6000.0f;
