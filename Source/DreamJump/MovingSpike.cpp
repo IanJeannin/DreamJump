@@ -1,9 +1,9 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
+#include "MovingSpike.h"
 #include "TimerManager.h"
 #include "Engine.h"
-#include "MovingSpike.h"
 
 // Sets default values
 AMovingSpike::AMovingSpike()
