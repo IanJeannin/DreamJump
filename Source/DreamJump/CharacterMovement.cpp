@@ -43,7 +43,7 @@ ACharacterMovement::ACharacterMovement()
 	FollowCamera = CreateDefaultSubobject<UCameraComponent>(TEXT("FollowCamera"));
 	FollowCamera->SetupAttachment(CameraBoom, USpringArmComponent::SocketName);
 	FollowCamera->bUsePawnControlRotation = false;
-	FollowCamera->bUseControllerViewRotation_DEPRECATED = false;
+	//FollowCamera->bUseControllerViewRotation_DEPRECATED = false;
 	GetCharacterMovement()->bOrientRotationToMovement = true;
 	GetCharacterMovement()->bUseControllerDesiredRotation = false;
 	
