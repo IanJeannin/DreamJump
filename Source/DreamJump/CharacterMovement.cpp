@@ -166,11 +166,16 @@ void ACharacterMovement::FallCheckTimer()
 }
 void ACharacterMovement::CustomJump()
 {
-	Jump();
+	if (DoubleJumpCounter <= 0)
+	{
+		ACharacterMovement::LaunchCharacter(FVector(0, 0, GetCharacterMovement()->JumpZVelocity), true, true);
+		DoubleJumpCounter++;
+		GetWorld()->GetTimerManager().SetTimer(GravMultiplierHandle, this, &ACharacterMovement::GravityMultiplierTimer, 0.1f, true, 0.f);
+		bJumping = true;
+	}
+	}
 
-	GetWorld()->GetTimerManager().SetTimer(GravMultiplierHandle, this, &ACharacterMovement::GravityMultiplierTimer, 0.1f, true, 0.f);
-	bJumping = true;
-}
+	
 void ACharacterMovement::StopCustomJump()
 {
 	GetCharacterMovement()->GravityScale = FallingGravityScale;
