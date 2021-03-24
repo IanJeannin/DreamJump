@@ -17,6 +17,7 @@ ACharacterMovement::ACharacterMovement()
 	bUseControllerRotationYaw = false;
 	bUseControllerRotationRoll = false;
 
+	
 	GetCharacterMovement()->bOrientRotationToMovement = true;
 	GetCharacterMovement()->RotationRate = FRotator(0.0f, 540.0f, 0.0f);
 	GetCharacterMovement()->JumpZVelocity = 600.f;
@@ -125,7 +126,8 @@ void ACharacterMovement::DoubleJump()
 {
 	if (DoubleJumpCounter <= 0)
 	{
-		ACharacterMovement::LaunchCharacter(FVector(0, 0, GetCharacterMovement()->JumpZVelocity), false, true);
+		ACharacterMovement::LaunchCharacter(FVector(0, 0, GetCharacterMovement()->JumpZVelocity), true, true);
+		
 		DoubleJumpCounter++;
 	}
 }
@@ -166,7 +168,7 @@ void ACharacterMovement::FallCheckTimer()
 }
 void ACharacterMovement::CustomJump()
 {
-	Jump();
+	DoubleJump();
 
 	GetWorld()->GetTimerManager().SetTimer(GravMultiplierHandle, this, &ACharacterMovement::GravityMultiplierTimer, 0.1f, true, 0.f);
 	bJumping = true;
