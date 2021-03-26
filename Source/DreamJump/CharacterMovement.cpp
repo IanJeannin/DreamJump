@@ -43,7 +43,7 @@ ACharacterMovement::ACharacterMovement()
 	FollowCamera = CreateDefaultSubobject<UCameraComponent>(TEXT("FollowCamera"));
 	FollowCamera->SetupAttachment(CameraBoom, USpringArmComponent::SocketName);
 	FollowCamera->bUsePawnControlRotation = false;
-	FollowCamera->bUseControllerViewRotation_DEPRECATED = false;
+	//FollowCamera->bUseControllerViewRotation_DEPRECATED = false;
 	GetCharacterMovement()->bOrientRotationToMovement = true;
 	GetCharacterMovement()->bUseControllerDesiredRotation = false;
 	
@@ -54,7 +54,7 @@ ACharacterMovement::ACharacterMovement()
 	GravMultiplier = 0.1f;
 	BaseCustomGravScale = 1.0f;
 	FallingGravityScale;
-	RunSpeed = 1000.f;
+	RunSpeed = 1500.f;
 	WalkSpeed = 600.f;
 
 
@@ -166,11 +166,16 @@ void ACharacterMovement::FallCheckTimer()
 }
 void ACharacterMovement::CustomJump()
 {
-	Jump();
+	if (DoubleJumpCounter <= 0)
+	{
+		ACharacterMovement::LaunchCharacter(FVector(0, 0, GetCharacterMovement()->JumpZVelocity), true, true);
+		DoubleJumpCounter++;
+		GetWorld()->GetTimerManager().SetTimer(GravMultiplierHandle, this, &ACharacterMovement::GravityMultiplierTimer, 0.1f, true, 0.f);
+		bJumping = true;
+	}
+	}
 
-	GetWorld()->GetTimerManager().SetTimer(GravMultiplierHandle, this, &ACharacterMovement::GravityMultiplierTimer, 0.1f, true, 0.f);
-	bJumping = true;
-}
+	
 void ACharacterMovement::StopCustomJump()
 {
 	GetCharacterMovement()->GravityScale = FallingGravityScale;
