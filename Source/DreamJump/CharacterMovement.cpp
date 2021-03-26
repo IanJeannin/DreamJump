@@ -20,7 +20,7 @@ ACharacterMovement::ACharacterMovement()
 	GetCharacterMovement()->bOrientRotationToMovement = true;
 	GetCharacterMovement()->RotationRate = FRotator(0.0f, 540.0f, 0.0f);
 	GetCharacterMovement()->JumpZVelocity = 600.f;
-	GetCharacterMovement()->AirControl = 0.2f;
+	//GetCharacterMovement()->AirControl = 0.2f;
 
 	CameraBoom = CreateDefaultSubobject<USpringArmComponent>(TEXT("CameraBoom"));
 	
@@ -56,6 +56,7 @@ ACharacterMovement::ACharacterMovement()
 	FallingGravityScale;
 	RunSpeed = 1500.f;
 	WalkSpeed = 600.f;
+	SprintJumpMultiplier = 1.5;
 
 
 
@@ -136,6 +137,7 @@ void ACharacterMovement::Walk()
 void ACharacterMovement::Sprint()
 {
 	GetCharacterMovement()->MaxWalkSpeed = RunSpeed;
+	isSprinting = true;
 }
 void ACharacterMovement::Landed(const FHitResult& Hit)
 {
@@ -144,6 +146,7 @@ void ACharacterMovement::Landed(const FHitResult& Hit)
 	bJumping = false;
 	GravMultiplier = 0.1f;
 	DoubleJumpCounter = 0;
+	isSprinting = false;
 }
 void ACharacterMovement::GravityMultiplierTimer()
 {
@@ -168,10 +171,22 @@ void ACharacterMovement::CustomJump()
 {
 	if (DoubleJumpCounter <= 0)
 	{
-		ACharacterMovement::LaunchCharacter(FVector(0, 0, GetCharacterMovement()->JumpZVelocity), true, true);
-		DoubleJumpCounter++;
-		GetWorld()->GetTimerManager().SetTimer(GravMultiplierHandle, this, &ACharacterMovement::GravityMultiplierTimer, 0.1f, true, 0.f);
-		bJumping = true;
+		if (!isSprinting)
+		{
+			ACharacterMovement::LaunchCharacter(FVector(0, 0, GetCharacterMovement()->JumpZVelocity), true, true);
+			DoubleJumpCounter++;
+			GetWorld()->GetTimerManager().SetTimer(GravMultiplierHandle, this, &ACharacterMovement::GravityMultiplierTimer, 0.1f, true, 0.f);
+			bJumping = true;
+		}
+		if (isSprinting)
+		{
+			ACharacterMovement::LaunchCharacter(FVector(0,0 , GetCharacterMovement()->JumpZVelocity * SprintJumpMultiplier), true, true);
+			DoubleJumpCounter++;
+			GetWorld()->GetTimerManager().SetTimer(GravMultiplierHandle, this, &ACharacterMovement::GravityMultiplierTimer, 0.1f, true, 0.f);
+			bJumping = true;
+
+		}
+		
 	}
 	}
 
