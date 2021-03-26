@@ -38,7 +38,11 @@ protected:
 
 	virtual void Landed(const FHitResult& Hit) override;
 
+	
+
+	UFUNCTION(BlueprintCallable)
 	void CustomJump();
+	UFUNCTION(BlueprintCallable)
 	void StopCustomJump();
 
 
@@ -78,6 +82,10 @@ public:
 		float WalkSpeed;
 	UPROPERTY()
 		float RunSpeed;
+	UPROPERTY()
+		bool isSprinting;
+	UPROPERTY(BlueprintReadWrite, EditAnywhere)
+		float SprintJumpMultiplier;
 
 
 	UFUNCTION()
