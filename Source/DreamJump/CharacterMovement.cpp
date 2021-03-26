@@ -54,7 +54,7 @@ ACharacterMovement::ACharacterMovement()
 	GravMultiplier = 0.1f;
 	BaseCustomGravScale = 1.0f;
 	FallingGravityScale;
-	RunSpeed = 1000.f;
+	RunSpeed = 1500.f;
 	WalkSpeed = 600.f;
 
 
