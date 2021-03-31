@@ -6,6 +6,7 @@
 #include "Runtime/Engine/Public/TimerManager.h"
 #include "GameFramework/Actor.h"
 #include "Engine/World.h"
+#include "GameFramework/Actor.h"
 
 // Sets default values
 ACharacterMovement::ACharacterMovement()
@@ -16,6 +17,8 @@ ACharacterMovement::ACharacterMovement()
 	bUseControllerRotationPitch = false;
 	bUseControllerRotationYaw = false;
 	bUseControllerRotationRoll = false;
+
+	
 
 	GetCharacterMovement()->bOrientRotationToMovement = true;
 	GetCharacterMovement()->RotationRate = FRotator(0.0f, 540.0f, 0.0f);
