@@ -6,6 +6,7 @@
 #include "Runtime/Engine/Public/TimerManager.h"
 #include "GameFramework/Actor.h"
 #include "Engine/World.h"
+#include "GameFramework/Actor.h"
 
 // Sets default values
 ACharacterMovement::ACharacterMovement()
@@ -16,6 +17,8 @@ ACharacterMovement::ACharacterMovement()
 	bUseControllerRotationPitch = false;
 	bUseControllerRotationYaw = false;
 	bUseControllerRotationRoll = false;
+
+	
 
 	GetCharacterMovement()->bOrientRotationToMovement = true;
 	GetCharacterMovement()->RotationRate = FRotator(0.0f, 540.0f, 0.0f);
@@ -141,12 +144,15 @@ void ACharacterMovement::Sprint()
 }
 void ACharacterMovement::Landed(const FHitResult& Hit)
 {
-	GetCharacterMovement()->GravityScale = BaseCustomGravScale;
-	GetWorld()->GetTimerManager().ClearTimer(GravMultiplierHandle);
-	bJumping = false;
-	GravMultiplier = 0.1f;
-	DoubleJumpCounter = 0;
-	isSprinting = false;
+		GetCharacterMovement()->GravityScale = BaseCustomGravScale;
+		GetWorld()->GetTimerManager().ClearAllTimersForObject(this);
+		bJumping = false;
+		GravMultiplier = 0;
+		DoubleJumpCounter = 0;
+		isSprinting = false;
+		
+	
+
 }
 void ACharacterMovement::GravityMultiplierTimer()
 {
@@ -158,14 +164,20 @@ void ACharacterMovement::GravityMultiplierTimer()
 	if (GetCharacterMovement()->GravityScale >= FallingGravityScale && bJumping)
 	{
 		GetCharacterMovement()->GravityScale = FallingGravityScale;
+		
 	}
 }
 void ACharacterMovement::FallCheckTimer()
 {
 	if (GetCharacterMovement()->IsFalling() && !bJumping)
-	{
+	{		
 		GetCharacterMovement()->GravityScale = FallingGravityScale;
 	}
+}
+void ACharacterMovement::JumpCheckTimer()
+{
+	
+	
 }
 void ACharacterMovement::CustomJump()
 {
@@ -175,17 +187,32 @@ void ACharacterMovement::CustomJump()
 		{
 			ACharacterMovement::LaunchCharacter(FVector(0, 0, GetCharacterMovement()->JumpZVelocity), true, true);
 			DoubleJumpCounter++;
-			GetWorld()->GetTimerManager().SetTimer(GravMultiplierHandle, this, &ACharacterMovement::GravityMultiplierTimer, 0.1f, true, 0.f);
+			GetWorld()->GetTimerManager().SetTimer(GravMultiplierHandle, this, &ACharacterMovement::GravityMultiplierTimer, .15f, true, 0.f);
 			bJumping = true;
+			/*
+			if (DoubleJumpCounter == 1)
+			{
+				GetWorld()->GetTimerManager().SetTimer(JumpCheckHandle, this, ACharacterMovement::JumpCheckTimer, .3f, true);
+
+			}
+			*/
+			
 		}
 		if (isSprinting)
 		{
 			ACharacterMovement::LaunchCharacter(FVector(0,0 , GetCharacterMovement()->JumpZVelocity * SprintJumpMultiplier), true, true);
 			DoubleJumpCounter++;
-			GetWorld()->GetTimerManager().SetTimer(GravMultiplierHandle, this, &ACharacterMovement::GravityMultiplierTimer, 0.1f, true, 0.f);
+			GetWorld()->GetTimerManager().SetTimer(GravMultiplierHandle, this, &ACharacterMovement::GravityMultiplierTimer, .2f, true, 0.f);
 			bJumping = true;
+			/*
+			if (DoubleJumpCounter == 1)
+			{
+				GetWorld()->GetTimerManager().SetTimer(JumpCheckHandle, this, ACharacterMovement::JumpCheckTimer, .3f, true);
+			}
+			*/
 
 		}
+		
 		
 	}
 	}

@@ -27,6 +27,9 @@ public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera)
 		UCameraComponent* FollowCamera;
 
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera)
+		AActor* Actor;
+
 	void MoveForward(float Axis);
 	void MoveRight(float Axis);
 
@@ -37,6 +40,7 @@ protected:
 	virtual void BeginPlay() override;
 
 	virtual void Landed(const FHitResult& Hit) override;
+	
 
 	
 
@@ -49,6 +53,7 @@ protected:
 
 	void GravityMultiplierTimer();
 	void FallCheckTimer();
+	void JumpCheckTimer();
 
 public:
 	// Called every frame
@@ -110,6 +115,8 @@ public:
 		FTimerHandle GravMultiplierHandle;
 	UPROPERTY()
 		FTimerHandle FallCheckHandle;
+	UPROPERTY()
+		FTimerHandle JumpCheckHandle;
 
 
 
