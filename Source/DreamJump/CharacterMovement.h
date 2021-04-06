@@ -43,7 +43,7 @@ protected:
 	
 
 	
-
+	/*
 	UFUNCTION(BlueprintCallable)
 	void CustomJump();
 	UFUNCTION(BlueprintCallable)
@@ -54,6 +54,7 @@ protected:
 	void GravityMultiplierTimer();
 	void FallCheckTimer();
 	void JumpCheckTimer();
+	*/
 
 public:
 	// Called every frame
