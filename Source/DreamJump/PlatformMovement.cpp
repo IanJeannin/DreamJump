@@ -31,7 +31,7 @@ void APlatformMovement::BeginPlay()
 // Called every frame
 void APlatformMovement::Tick(float DeltaTime)
 {
-	Super::Tick(DeltaTime);
+	//Super::Tick(DeltaTime);
 
 	//Update the universal DeltaTime's variable
 	UDeltaTime = DeltaTime;
@@ -44,7 +44,7 @@ void APlatformMovement::Tick(float DeltaTime)
 	}
 
 	//Set the rotation with the three adjustable parameters
-	rotation = FQuat(FRotator(xRotate, yRotate, zRotate));
+	rotation = FQuat(FRotator(xRotate, yRotate, zRotate)*DeltaTime);
 
 	//Move the actor with the rotation
 	AddActorLocalRotation(rotation, false, 0, ETeleportType::None);
