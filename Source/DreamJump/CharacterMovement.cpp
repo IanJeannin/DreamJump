@@ -55,8 +55,8 @@ ACharacterMovement::ACharacterMovement()
 	DashDistance = 6000.0f;
 	DashCooldown = 1.0f;
 	GravMultiplier = 1;
-	BaseCustomGravScale = 2.0f;
-	FallingGravityScale = 3.5f;
+	BaseCustomGravScale = 3.0f;
+	FallingGravityScale = 5.5f;
 	RunSpeed = 1500.f;
 	WalkSpeed = 600.f;
 	SprintJumpMultiplier = 1.5;
@@ -70,7 +70,7 @@ ACharacterMovement::ACharacterMovement()
 void ACharacterMovement::BeginPlay()
 {
 	Super::BeginPlay();
-
+	BaseCustomGravScale = GetCharacterMovement()->JumpZVelocity;
 	//GetWorld()->GetTimerManager().SetTimer(FallCheckHandle, this, &ACharacterMovement::FallCheckTimer, 0.1f, true, 0.f);
 	WalkSpeed = GetCharacterMovement()->MaxWalkSpeed;
 	//GetCharacterMovement()->MaxWalkSpeed = WalkSpeed;
@@ -129,8 +129,17 @@ void ACharacterMovement::DoubleJump()
 {
 	if (DoubleJumpCounter <= 1)
 	{
+		if (DoubleJumpCounter == 0)
+		{
+			GetCharacterMovement()->JumpZVelocity = 1100;
+			Jump();
+		}
+		else
+		{
+			GetCharacterMovement()->JumpZVelocity = 600;
+			Jump();
+		}
 		//ACharacterMovement::LaunchCharacter(FVector(0, 0, GetCharacterMovement()->JumpZVelocity), false, true);
-		Jump();
 		DoubleJumpCounter++;
 	}
 }
