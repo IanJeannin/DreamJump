@@ -1,0 +1,15 @@
+LIST OF LEVELS
+
+Completed Levels:
+Playground - Playground.umap(Ian)
+Scattered Field - LevelOne.umap (Ian)
+Book Mountain - CaseyTestLevel.umap (Casey)
+Circle Circus - SpinningCiclesLevel.umap (Casey)
+
+In Progress:
+Desk Climb - DeskClimbLevel.umap (Casey)
+Unanmed Riding Platform Level - ??? (Ian)
+Unamed Tutorial Level - EasyLEvel.umap (Casey)
+
+Order:
+To be revised later

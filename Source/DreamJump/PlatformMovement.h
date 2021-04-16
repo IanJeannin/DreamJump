@@ -29,10 +29,6 @@ public:
 	//Checkbox to determine moving or not
 	UPROPERTY(EditAnywhere)
 		bool isMoving;
-
-	//Checkbox to determine rotation or not
-	UPROPERTY(EditAnywhere)
-		bool isRotating;
 	
 	//Speed of the platform
 	UPROPERTY(EditAnywhere)
@@ -45,10 +41,6 @@ public:
 	//The axis the platform will move. 1 for X, 2 for Y, 3 for Z
 	UPROPERTY(EditAnywhere)
 		int moveAxis;
-
-	//The axis the platform will rotate upon. 1 for X, 2 for Y, 3 for Z
-	UPROPERTY(EditAnywhere)
-		int rotateAxis;
 
 	//Rotate the X axis a certain units per frame
 	UPROPERTY(EditAnywhere)

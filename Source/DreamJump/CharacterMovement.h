@@ -25,22 +25,54 @@ public:
 		USpringArmComponent* CameraBoom;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera)
-		UCameraComponent* FollowCamera; 
+		UCameraComponent* FollowCamera;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera)
+		AActor* Actor;
 
 	void MoveForward(float Axis);
 	void MoveRight(float Axis);
+
+
+
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
 	virtual void Landed(const FHitResult& Hit) override;
+	
 
-public:	
+	
+	/*
+	UFUNCTION(BlueprintCallable)
+	void CustomJump();
+	UFUNCTION(BlueprintCallable)
+	void StopCustomJump();
+
+
+
+	void GravityMultiplierTimer();
+	void FallCheckTimer();
+	void JumpCheckTimer();
+	*/
+
+public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
+
+	UPROPERTY(EditAnywhere)
+		float GravMultiplier = 0.1f;
+	UPROPERTY(EditAnywhere)
+		bool bJumping;
+	UPROPERTY(EditAnywhere)
+		float BaseCustomGravScale;
+	UPROPERTY(EditAnywhere)
+		float FallingGravityScale;
+	//UPROPERTY(EditAnywhere)
+		//float CustomJumpHeight;
 
 	UFUNCTION()
 		void DoubleJump();
@@ -50,6 +82,17 @@ public:
 
 	UFUNCTION()
 		void Walk();
+	UFUNCTION()
+		void Sprint();
+	UPROPERTY()
+		float WalkSpeed;
+	UPROPERTY()
+		float RunSpeed;
+	UPROPERTY()
+		bool isSprinting;
+	UPROPERTY(BlueprintReadWrite, EditAnywhere)
+		float SprintJumpMultiplier;
+
 
 	UFUNCTION()
 		void Dash();
@@ -69,6 +112,13 @@ public:
 		void ResetDash();
 	UPROPERTY()
 		FTimerHandle UnusedHandle;
+	UPROPERTY()
+		FTimerHandle GravMultiplierHandle;
+	UPROPERTY()
+		FTimerHandle FallCheckHandle;
+	UPROPERTY()
+		FTimerHandle JumpCheckHandle;
+
 
 
 };
